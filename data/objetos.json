@@ -1,0 +1,39 @@
+[
+  {
+    "nombre": "Botiquín",
+    "tipo": "cura",
+    "descripcion": "Restaura 20 puntos de vida al jugador.",
+    "efecto": {
+      "tipo": "curacion",
+      "valor": 20
+    }
+  },
+  {
+    "nombre": "Pistola 9mm",
+    "tipo": "arma",
+    "descripcion": "Arma básica que aumenta el ataque en 5 puntos.",
+    "efecto": {
+      "tipo": "ataque_extra",
+      "valor": 5
+    }
+  },
+  {
+    "nombre": "Granada incendiaria",
+    "tipo": "arma",
+    "descripcion": "Inflige quemadura al enemigo, causando 10 de daño por turno durante 2 turnos.",
+    "efecto": {
+      "tipo": "quemadura",
+      "dañoPorTurno": 10,
+      "duracion": 2
+    }
+  },
+  {
+    "nombre": "Chaleco antibalas",
+    "tipo": "armadura",
+    "descripcion": "Aumenta la defensa del portador en 5 puntos.",
+    "efecto": {
+      "tipo": "defensa_extra",
+      "valor": 5
+    }
+  }
+]

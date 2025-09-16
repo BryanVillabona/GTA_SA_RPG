@@ -1,0 +1,95 @@
+[
+  {
+    "nombre": "Ryder",
+    "vida": 90,
+    "ataque": 12,
+    "defensa": 5,
+    "habilidadEspecial": {
+      "nombre": "Golpe Sorpresa",
+      "descripcion": "Aumenta su ataque en 5 puntos este turno.",
+      "efecto": {
+        "tipo": "buff_ataque",
+        "valor": 5,
+        "duracion": 1
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Botiquín",
+        "tipo": "cura",
+        "efecto": { "tipo": "curacion", "valor": 15 },
+        "cantidad": 1
+      }
+    ]
+  },
+  {
+    "nombre": "Vagos Armado",
+    "vida": 120,
+    "ataque": 16,
+    "defensa": 7,
+    "habilidadEspecial": {
+      "nombre": "Disparo Preciso",
+      "descripcion": "Ignora la defensa del enemigo este turno.",
+      "efecto": {
+        "tipo": "ignorar_defensa",
+        "duracion": 1
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Pistola 9mm",
+        "tipo": "arma",
+        "efecto": { "tipo": "ataque_extra", "valor": 5 },
+        "cantidad": 1
+      }
+    ]
+  },
+  {
+    "nombre": "Oficial Tenpenny (Jefe Final)",
+    "vida": 250,
+    "ataque": 30,
+    "defensa": 15,
+    "habilidadEspecial": {
+      "nombre": "Corrupción Policial",
+      "descripcion": "Se cura 20 puntos y aumenta la defensa en 5 por 2 turnos.",
+      "efecto": {
+        "tipo": "cura_y_buff_defensa",
+        "curacion": 20,
+        "defensaExtra": 5,
+        "duracion": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Botiquín Grande",
+        "tipo": "cura",
+        "efecto": { "tipo": "curacion", "valor": 40 },
+        "cantidad": 1
+      }
+    ],
+    "esJefe": true
+  },
+  {
+    "nombre": "Big Smoke (Jefe Final)",
+    "vida": 300,
+    "ataque": 35,
+    "defensa": 20,
+    "habilidadEspecial": {
+      "nombre": "Ráfaga de Escopeta",
+      "descripcion": "Hace el doble de daño este turno.",
+      "efecto": {
+        "tipo": "ataque_doble",
+        "multiplicador": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Chaleco Antibalas",
+        "tipo": "armadura",
+        "efecto": { "tipo": "defensa_extra", "valor": 8 },
+        "cantidad": 1
+      }
+    ],
+    "esJefe": true
+  }
+]

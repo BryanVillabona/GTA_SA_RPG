@@ -1,0 +1,92 @@
+[
+  {
+    "rol": "Medico",
+    "vida": 100,
+    "ataque": 10,
+    "defensa": 5,
+    "habilidadEspecial": {
+      "nombre": "Curar",
+      "descripcion": "Restaura 30 puntos de vida al jugador.",
+      "efecto": {
+        "tipo": "curacion",
+        "valor": 30
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Botiquín",
+        "tipo": "cura",
+        "efecto": { "tipo": "curacion", "valor": 20 },
+        "cantidad": 1
+      }
+    ]
+  },
+  {
+    "rol": "Ganster",
+    "vida": 120,
+    "ataque": 20,
+    "defensa": 8,
+    "habilidadEspecial": {
+      "nombre": "Disparo doble",
+      "descripcion": "Dispara dos veces en un mismo turno.",
+      "efecto": {
+        "tipo": "ataque_doble",
+        "multiplicador": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Pistola 9mm",
+        "tipo": "arma",
+        "efecto": { "tipo": "ataque_extra", "valor": 5 },
+        "cantidad": 1
+      }
+    ]
+  },
+  {
+    "rol": "Narco",
+    "vida": 150,
+    "ataque": 25,
+    "defensa": 10,
+    "habilidadEspecial": {
+      "nombre": "Granada incendiaria",
+      "descripcion": "Quema al enemigo durante 2 turnos, causando 10 de daño por turno.",
+      "efecto": {
+        "tipo": "quemadura",
+        "dañoPorTurno": 10,
+        "duracion": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Granada incendiaria",
+        "tipo": "arma",
+        "efecto": { "tipo": "quemadura", "dañoPorTurno": 10, "duracion": 2 },
+        "cantidad": 1
+      }
+    ]
+  },
+  {
+    "rol": "Militar",
+    "vida": 180,
+    "ataque": 22,
+    "defensa": 15,
+    "habilidadEspecial": {
+      "nombre": "Escudo defensivo",
+      "descripcion": "Reduce a la mitad el daño recibido durante 1 turno.",
+      "efecto": {
+        "tipo": "defensa_extra",
+        "multiplicador": 0.5,
+        "duracion": 1
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Chaleco antibalas",
+        "tipo": "armadura",
+        "efecto": { "tipo": "defensa_extra", "valor": 5 },
+        "cantidad": 1
+      }
+    ]
+  }
+]

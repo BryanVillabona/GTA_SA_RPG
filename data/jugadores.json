@@ -1,0 +1,23 @@
+// esto es un ejemplo de como quedaría el archivo
+
+[
+  {
+    "id": "1",
+    "nombre": "CJ",
+    "rol": "Narco",
+    "nivel": 3,
+    "vida": 160,
+    "ataque": 28,
+    "defensa": 12,
+    "inventario": [
+      {
+        "nombre": "Granada incendiaria",
+        "cantidad": 1
+      },
+      {
+        "nombre": "Botiquín",
+        "cantidad": 2
+      }
+    ]
+  }
+]
