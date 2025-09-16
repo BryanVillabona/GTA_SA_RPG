@@ -1,13 +1,7 @@
 class Personaje {
-    constructor(id, nombre, vida, ataque, defensa, nivel = 1, habilidadEspecial, inventario) {
+    constructor(rol, nombre, vida, ataque, defensa, habilidadEspecial, inventario) {
         if (this.constructor === Personaje) {
-            throw new Error("No se puede instanciar la clase abstracta 'Personaje'")
-        }
-
-        if (id > 0 && typeof id === "number") {
-            this.id = id;
-        } else {
-            throw new Error("Error en id")
+            throw new Error("No se puede instanciar la clase abstracta 'Chismosa'")
         }
 
         if (typeof nombre === "string" && nombre.length !== 0) {
@@ -16,7 +10,7 @@ class Personaje {
             throw new Error ("Error en nombre")
         }
 
-        if (typeof vida === "number" && vida >= 0 && vida <= 300) {
+        if (typeof vida === "number" && vida >= 0) {
             this.vida = vida;
         } else {
             throw new Error ("Error en vida")
@@ -29,7 +23,7 @@ class Personaje {
         }
 
         if (typeof defensa === "number" && defensa >= 0) {
-            this.defensa = defensa;
+            this.ataque = defensa;
         } else {
             throw new Error ("Error en defensa")
         }
@@ -46,11 +40,11 @@ class Personaje {
             throw new Error ("Error en habilidadEspecial")
         }
 
-        if (Array.isArray(inventario)) {
+        if (typeof inventario === "object") {
             this.inventario = inventario;
-          } else {
-            throw new Error("Error en inventario");
-          }
+        } else {
+            throw new Error ("Error en inventario")
+        }
     }
 
     atacar() {
@@ -74,9 +68,4 @@ class Personaje {
         this.ataque += 2;
         console.log(`${this.nombre} ha subido a nivel ${this.nivel}`)
     }
-
-    abrirInventario() {
-        throw new Error("Método debe ser implementado en subclases posteriores");
-    }
-
 }
