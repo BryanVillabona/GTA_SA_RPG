@@ -1,11 +1,12 @@
 // services/GestorJugadores.js
-import fs from ("fs/promises")
-import path from ("path")
+import fs from "fs/promises";
+import path from "path";
 import { Medico, Ganster, Narco, Militar } from '../models/Roles.js';
 
 // path por defecto (puedes inyectarlo si quieres)
-const DEFAULT_PATH = path.join(__dirname, '..', 'data', 'jugadores.json');
-const ROLES_PATH = path.join(__dirname, '..', 'data', 'personajes.json');
+const DEFAULT_PATH = path.resolve("./data/jugadores.json");
+const ROLES_PATH = path.resolve("./data/roles.json");
+
 
 class GestorJugadores {
   constructor({ jugadoresPath = DEFAULT_PATH, rolesPath = ROLES_PATH } = {}) {

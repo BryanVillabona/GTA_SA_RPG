@@ -1,6 +1,6 @@
 // utils/Presentador.js
-const chalk = require('chalk');
-const boxen = require('boxen');
+import chalk from "chalk";
+import boxen from "boxen";
 
 class Presentador {
   static mostrarDetalles(personaje) {

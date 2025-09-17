@@ -23,6 +23,7 @@ async function mostrarMenu() {
       choices: [
         { name: '-- Crear personaje', value: 'crear' },
         { name: '-- Ver personajes', value: 'ver' },
+        { name: '-- Eliminar personaje', value: 'eliminar' },
         { name: '-- Iniciar batalla', value: 'batalla' },
         { name: '-- Salir', value: 'salir' },
       ],
@@ -31,6 +32,7 @@ async function mostrarMenu() {
 
   if (accion === 'crear') await juego.crearPersonaje();
   if (accion === 'ver') await juego.verPersonajes();
+  if (accion === 'eliminar') await juego.eliminarPersonaje();
   if (accion === 'batalla') await juego.iniciarBatalla();
   if (accion === 'salir') return process.exit();
 
