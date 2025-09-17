@@ -1,125 +1,79 @@
+// Inventario.js
 class Inventario {
-    constructor(objetos = []) {
-        if (!Array.isArray(objetos)) {
-            throw new Error("El inventario debe inicializarse con un array");
-        }
-        this.items = objetos;
-    }
+  constructor(objetos = []) {
+    if (!Array.isArray(objetos)) throw new Error("El inventario debe inicializarse con un array");
+    this.items = objetos; // array de instancias de Item (o subclases)
+  }
 
-    agregarItem(item) {
-        this.items.push(item);
-        console.log(`${item.nombre} añadido al inventario`);
-    }
+  agregarItem(item) {
+    this.items.push(item);
+    return item;
+  }
 
-    verItems() {
-        console.log("Inventario:");
-        this.items.forEach((item, i) => {
-            console.log(`${i + 1}. ${item.nombre} (${item.tipo}) - ${item.descripcion}`);
-        });
-    }
+  verItems() {
+    return this.items.map((it, i) => ({ index: i, nombre: it.nombre, tipo: it.tipo, cantidad: it.cantidad }));
+  }
 
-    usarItem(index, objetivo) {
-        if (index < 0 || index >= this.items.length) {
-            console.log("Índice inválido");
-            return;
-        }
-        const item = this.items[index];
-        item.usar(objetivo);
-    }
+  usarItem(index, objetivo, notificador = null) {
+    if (index < 0 || index >= this.items.length) throw new Error("Índice inválido");
+    const item = this.items[index];
+    const resultado = item.usar(objetivo);
+    if (item.cantidad <= 0) this.items.splice(index, 1);
+    if (notificador && resultado?.mensaje) notificador.mostrarAccion(resultado.mensaje);
+    return resultado;
+  }
 
-    eliminarItem(index) {
-        if (index < 0 || index >= this.items.length) {
-            console.log("Índice inválido");
-            return;
-        }
-        this.items = this.usuarios.filter(i => i !== index);
-    }
+  eliminarItem(index) {
+    if (index < 0 || index >= this.items.length) throw new Error("Índice inválido");
+    return this.items.splice(index, 1)[0];
+  }
 }
 
+class Item {
+  constructor({ nombre, tipo = 'generico', descripcion = '', valor = 0, cantidad = 1, efecto = null }) {
+    if (new.target === Item) throw new Error("No se puede instanciar Item directamente");
+    if (!nombre) throw new Error("Item necesita nombre");
+    this.nombre = nombre;
+    this.tipo = tipo;
+    this.descripcion = descripcion;
+    this.valor = valor;
+    this.cantidad = cantidad;
+    this.efecto = efecto; // objeto libre para describir efectos
+  }
 
-class Items {
-    constructor(nombre, tipo, descripcion, valor) {
-        if (this.constructor === Items) {
-            throw new Error("No se puede instanciar la clase abstracta 'Items'")
-        }
-
-        if (typeof nombre === "string") {
-            this.nombre = nombre;
-        } else {
-            throw new Error ("Error en nombre")
-        }
-
-        if (typeof tipo === "string") {
-            this.tipo = tipo;
-        } else {
-            throw new Error ("Error en efecto")
-        }
-        
-        if (typeof descripcion === "string") {
-            this.descripcion = descripcion;
-        } else {
-            throw new Error ("Error en descripcion")
-        }
-
-        if (typeof valor === "number" && valor >= 0 && valor <= 100) {
-            this.valor = valor
-        } else {
-            throw new Error ("Error en valor")
-        }
-    }
-
-    usar() {
-        throw new Error("Método debe ser implementado en subclases posteriores");
-    }
+  usar() {
+    throw new Error("usar() debe implementarse en subclase");
+  }
 }
 
-class Arma extends Items {
-    constructor(nombre, tipo, descripcion, valor) {
-        super(nombre, tipo, descripcion, valor)
-    }
-
-    usar(objetivo) {
-        if (this.cantidad <= 0) {
-          console.log(`No quedan más ${this.nombre}`);
-          return;
-        }
-    
-        objetivo.vida -= this.efecto.valor;
-        console.log(`${objetivo.rol} recibe ${this.efecto.valor} de daño con ${this.nombre}. Vida actual: ${objetivo.vida}`);
-        this.cantidad--;
-    }
+class Arma extends Item {
+  usar(objetivo) {
+    if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
+    const dano = (this.efecto?.valor) ?? this.valor;
+    const danoReal = objetivo.recibirDaño(dano);
+    this.cantidad--;
+    return { ok: true, mensaje: `${objetivo.nombre} recibe ${danoReal} de daño con ${this.nombre}` };
+  }
 }
 
-class Curacion extends Items {
-    constructor(nombre, tipo, descripcion, valor) {
-        super(nombre, tipo, descripcion, valor)
-    }
-
-    usar(objetivo) {
-        if (this.cantidad <= 0) {
-          console.log(`❌ No quedan más ${this.nombre}`);
-          return;
-        }
-    
-        objetivo.vida += this.efecto.valor;
-        console.log(`💊 ${objetivo.rol} recupera ${this.efecto.valor} de vida con ${this.nombre}. Vida actual: ${objetivo.vida}`);
-        this.cantidad--;
-    }
+class Curacion extends Item {
+  usar(objetivo) {
+    if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
+    const cura = (this.efecto?.valor) ?? this.valor;
+    objetivo.vida = objetivo.vida + cura;
+    this.cantidad--;
+    return { ok: true, mensaje: `${objetivo.nombre} recupera ${cura} con ${this.nombre}` };
+  }
 }
 
-class Armadura extends Items {
-    constructor(nombre, tipo, descripcion, valor) {
-        super(nombre, tipo, descripcion, valor)
-    }
-
-    usar(objetivo) {
-        if (this.cantidad <= 0) {
-          console.log(`No quedan más ${this.nombre}`);
-          return;
-        }
-    
-        objetivo.defensa += this.efecto.valor;
-        console.log(`${objetivo.rol} aumenta su defensa en ${this.efecto.valor} con ${this.nombre}. Defensa actual: ${objetivo.defensa}`);
-        this.cantidad--;
-    }
+class Armadura extends Item {
+  usar(objetivo) {
+    if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
+    const defensa = (this.efecto?.valor) ?? this.valor;
+    objetivo.defensa += defensa;
+    this.cantidad--;
+    return { ok: true, mensaje: `${objetivo.nombre} aumenta defensa ${defensa} con ${this.nombre}` };
+  }
 }
+
+module.exports = { Inventario, Item, Arma, Curacion, Armadura };

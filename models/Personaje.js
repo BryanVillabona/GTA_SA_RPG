@@ -1,82 +1,51 @@
+// Personaje.js
 class Personaje {
-    constructor(id, nombre, vida, ataque, defensa, nivel = 1, habilidadEspecial, inventario) {
-        if (this.constructor === Personaje) {
-            throw new Error("No se puede instanciar la clase abstracta 'Personaje'")
-        }
-
-        if (id > 0 && typeof id === "number") {
-            this.id = id;
-        } else {
-            throw new Error("Error en id")
-        }
-
-        if (typeof nombre === "string" && nombre.length !== 0) {
-            this.nombre = nombre;
-        } else {
-            throw new Error ("Error en nombre")
-        }
-
-        if (typeof vida === "number" && vida >= 0 && vida <= 300) {
-            this.vida = vida;
-        } else {
-            throw new Error ("Error en vida")
-        }
-
-        if (typeof ataque === "number" && ataque >= 0) {
-            this.ataque = ataque;
-        } else {
-            throw new Error ("Error en ataque")
-        }
-
-        if (typeof defensa === "number" && defensa >= 0) {
-            this.defensa = defensa;
-        } else {
-            throw new Error ("Error en defensa")
-        }
-
-        if (typeof nivel === "number" && nivel >= 1) {
-            this.nivel = nivel;
-        } else {
-            throw new Error ("Error en nivel")
-        }
-
-        if (typeof habilidadEspecial === "object") {
-            this.habilidadEspecial = habilidadEspecial;
-        } else {
-            throw new Error ("Error en habilidadEspecial")
-        }
-
-        if (Array.isArray(inventario)) {
-            this.inventario = inventario;
-          } else {
-            throw new Error("Error en inventario");
-          }
+  constructor({ id = null, rol, nombre, vida = 100, ataque = 10, defensa = 5, nivel = 1, habilidadEspecial = {}, inventario = [] }) {
+    if (new.target === Personaje) {
+      throw new Error("No se puede instanciar la clase abstracta 'Personaje'");
     }
 
-    atacar() {
-        throw new Error("Método debe ser implementado en subclases posteriores");
-    }
+    if (typeof nombre !== "string" || nombre.length === 0) throw new Error("Error en nombre");
 
-    recibirDaño(dano) {
-        const danoReal = Math.max(0, dano - this.defensa);
-        this.vida -= danoReal;
-        console.log(`${this.nombre} recibió ${danoReal} de daño. Vida restante: ${this.vida}`);
-    }
+    this.id = id ?? Date.now().toString(); // puedes reemplazar por uuid
+    this.rol = rol;
+    this.nombre = nombre;
+    this.vida = Number(vida);
+    this.ataque = Number(ataque);
+    this.defensa = Number(defensa);
+    this.nivel = Number(nivel);
+    this.habilidadEspecial = habilidadEspecial || {};
+    this.inventario = inventario || [];
+    this.estado = {}; // para efectos temporales (quemadura, buffs, etc.)
+  }
 
-    usarHabilidad(objetivo) {
-        throw new Error("Método debe ser implementado en subclases posteriores");
-    }
+  atacar(objetivo, notificador = null) {
+    const dano = this.ataque;
+    const danoReal = objetivo.recibirDaño(dano);
+    if (notificador) notificador.mostrarAccion(`${this.nombre} ataca a ${objetivo.nombre} y hace ${danoReal} de daño`);
+    return danoReal;
+  }
 
-    subirNivel() {
-        this.nivel++;
-        this.vida += 20;
-        this.defensa += 5;
-        this.ataque += 2;
-        console.log(`${this.nombre} ha subido a nivel ${this.nivel}`)
-    }
+  recibirDaño(dano) {
+    // aplica defensa y buffs (si existieran)
+    const multiplicadorDefensa = this.estado.defensaMultiplicador ?? 1;
+    const defensaActual = (this.defensa || 0) * multiplicadorDefensa;
+    const danoReal = Math.max(0, dano - defensaActual);
+    this.vida = Math.max(0, this.vida - danoReal);
+    return danoReal;
+  }
 
-    abrirInventario() {
-        throw new Error("Método debe ser implementado en subclases posteriores");
-    }
+  usarHabilidad(objetivo, notificador = null) {
+    throw new Error("Método usarHabilidad debe ser implementado en la subclase");
+  }
 
+  subirNivel() {
+    this.nivel += 1;
+    this.vida += 20;
+    this.ataque += 2;
+    this.defensa += 5;
+    return this.nivel;
+  }
 }
+
+module.exports = Personaje;

@@ -1,23 +1,135 @@
-// esto es un ejemplo de como quedaría el archivo
-
 [
   {
-    "id": "1",
-    "nombre": "CJ",
+    "id": "1758064192380",
+    "rol": "Ganster",
+    "nombre": "bryan",
+    "vida": 120,
+    "ataque": 20,
+    "defensa": 8,
+    "nivel": 1,
+    "habilidadEspecial": {
+      "nombre": "Disparo doble",
+      "descripcion": "Dispara dos veces en un mismo turno.",
+      "efecto": {
+        "tipo": "ataque_doble",
+        "multiplicador": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Pistola 9mm",
+        "tipo": "arma",
+        "descripcion": "Arma básica que aumenta el ataque en 5 puntos.",
+        "valor": 40
+      }
+    ],
+    "estado": {}
+  },
+  {
+    "id": "1758065859640",
     "rol": "Narco",
-    "nivel": 3,
-    "vida": 160,
-    "ataque": 28,
-    "defensa": 12,
+    "nombre": "bryan",
+    "vida": 150,
+    "ataque": 25,
+    "defensa": 10,
+    "nivel": 1,
+    "habilidadEspecial": {
+      "nombre": "Granada incendiaria",
+      "descripcion": "Quema al enemigo durante 2 turnos, causando 10 de daño por turno.",
+      "efecto": {
+        "tipo": "quemadura",
+        "dañoPorTurno": 10,
+        "duracion": 2
+      }
+    },
     "inventario": [
       {
         "nombre": "Granada incendiaria",
-        "cantidad": 1
-      },
+        "tipo": "arma",
+        "descripcion": "Inflige quemadura al enemigo, causando 10 de daño por turno durante 2 turnos.",
+        "valor": 20
+      }
+    ],
+    "estado": {}
+  },
+  {
+    "id": "1758065874771",
+    "rol": "Narco",
+    "nombre": "bryan",
+    "vida": 150,
+    "ataque": 25,
+    "defensa": 10,
+    "nivel": 1,
+    "habilidadEspecial": {
+      "nombre": "Granada incendiaria",
+      "descripcion": "Quema al enemigo durante 2 turnos, causando 10 de daño por turno.",
+      "efecto": {
+        "tipo": "quemadura",
+        "dañoPorTurno": 10,
+        "duracion": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Granada incendiaria",
+        "tipo": "arma",
+        "descripcion": "Inflige quemadura al enemigo, causando 10 de daño por turno durante 2 turnos.",
+        "valor": 20
+      }
+    ],
+    "estado": {}
+  },
+  {
+    "id": "1758068636174",
+    "rol": "Militar",
+    "nombre": "andres",
+    "vida": 180,
+    "ataque": 22,
+    "defensa": 15,
+    "nivel": 1,
+    "habilidadEspecial": {
+      "nombre": "Escudo defensivo",
+      "descripcion": "Reduce a la mitad el daño recibido durante 1 turno.",
+      "efecto": {
+        "tipo": "defensa_extra",
+        "multiplicador": 0.5,
+        "duracion": 1
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Chaleco antibalas",
+        "tipo": "armadura",
+        "descripcion": "Aumenta la defensa del portador en 5 puntos.",
+        "valor": 100
+      }
+    ],
+    "estado": {}
+  },
+  {
+    "id": "1758068649501",
+    "rol": "Medico",
+    "nombre": "villabona",
+    "vida": 100,
+    "ataque": 10,
+    "defensa": 5,
+    "nivel": 1,
+    "habilidadEspecial": {
+      "nombre": "Curar",
+      "descripcion": "Restaura 30 puntos de vida al jugador.",
+      "efecto": {
+        "tipo": "curacion",
+        "valor": 30
+      }
+    },
+    "inventario": [
       {
         "nombre": "Botiquín",
-        "cantidad": 2
+        "tipo": "cura",
+        "descripcion": "Restaura 20 puntos de vida al jugador.",
+        "valor": 50
       }
-    ]
+    ],
+    "estado": {}
   }
 ]
