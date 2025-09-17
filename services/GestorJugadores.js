@@ -5,7 +5,7 @@ import { Medico, Ganster, Narco, Militar } from '../models/Roles.js';
 
 // path por defecto (puedes inyectarlo si quieres)
 const DEFAULT_PATH = path.resolve("./data/jugadores.json");
-const ROLES_PATH = path.resolve("./data/roles.json");
+const ROLES_PATH = path.resolve("./data/personajes.json");
 
 
 class GestorJugadores {

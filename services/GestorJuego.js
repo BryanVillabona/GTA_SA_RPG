@@ -4,8 +4,8 @@ import GestorJugadores from './GestorJugadores.js';
 import Presentador from '../utils/Presentador.js';
 
 class GestorJuego {
-  constructor() {
-    this.gestorJugadores = new GestorJugadores();
+  constructor({ gestorJugadores }) {
+    this.gestorJugadores = gestorJugadores || new GestorJugadores();
     this.personajeActivo = null;
   }
 

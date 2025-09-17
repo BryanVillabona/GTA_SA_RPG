@@ -2,10 +2,13 @@ import inquirer from 'inquirer';
 import boxen from "boxen";
 import chalk from "chalk";
 
+import GestorJugadores from './services/GestorJugadores.js';
 import GestorJuego from './services/GestorJuego.js';
 import Presentador from './utils/Presentador.js';
 
-const juego = new GestorJuego();
+// 1. Creamos las dependencias (servicios)
+const gestorJugadores = new GestorJugadores();
+const juego = new GestorJuego({ gestorJugadores }); // 2. Inyectamos la dependencia
 
 async function mostrarMenu() {
   console.clear();
@@ -40,6 +43,3 @@ async function mostrarMenu() {
 }
 
 mostrarMenu();
-
-
-
