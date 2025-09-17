@@ -1,9 +1,9 @@
-const inquirer = require('inquirer');
-const boxen = require('boxen');
-const chalk = require('chalk');
+import inquirer from 'inquirer';
+import boxen from "boxen";
+import chalk from "chalk";
 
-const GestorJuego = require('./services/GestorJuego');
-const Presentador = require('./utils/Presentador');
+import GestorJuego from './services/GestorJuego.js';
+import Presentador from './utils/Presentador.js';
 
 const juego = new GestorJuego();
 

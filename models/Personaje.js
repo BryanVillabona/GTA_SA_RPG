@@ -48,4 +48,4 @@ class Personaje {
   }
 }
 
-module.exports = Personaje;
+export default Personaje;

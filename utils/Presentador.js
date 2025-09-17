@@ -34,4 +34,4 @@ class Presentador {
   }
 }
 
-module.exports = Presentador;
+export default Presentador;

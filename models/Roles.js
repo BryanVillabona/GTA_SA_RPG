@@ -1,6 +1,6 @@
 // Roles.js
 // CommonJS - subclases de Personaje
-const Personaje = require('./Personaje');
+import Personaje from './Personaje.js';
 
 /**
  * Cada subclase:
@@ -98,4 +98,4 @@ class Militar extends Personaje {
   }
 }
 
-module.exports = { Medico, Ganster, Narco, Militar };
+export { Medico, Ganster, Narco, Militar };

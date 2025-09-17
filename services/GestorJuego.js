@@ -1,7 +1,7 @@
 // services/GestorJuego.js
-const inquirer = require('inquirer');
-const GestorJugadores = require('./GestorJugadores');
-const Presentador = require('../utils/Presentador');
+import inquirer from 'inquirer';
+import GestorJugadores from './GestorJugadores.js';
+import Presentador from '../utils/Presentador.js';
 
 class GestorJuego {
   constructor() {
@@ -65,4 +65,4 @@ class GestorJuego {
   }
 }
 
-module.exports = GestorJuego;
+export default GestorJuego

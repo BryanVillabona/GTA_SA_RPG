@@ -76,4 +76,4 @@ class Armadura extends Item {
   }
 }
 
-module.exports = { Inventario, Item, Arma, Curacion, Armadura };
+export { Inventario, Item, Arma, Curacion, Armadura };

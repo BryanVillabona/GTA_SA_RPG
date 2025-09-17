@@ -1,7 +1,7 @@
 // services/GestorJugadores.js
-const fs = require('fs').promises;
-const path = require('path');
-const { Medico, Ganster, Narco, Militar } = require('../models/Roles');
+import fs from ("fs/promises")
+import path from ("path")
+import { Medico, Ganster, Narco, Militar } from '../models/Roles.js';
 
 // path por defecto (puedes inyectarlo si quieres)
 const DEFAULT_PATH = path.join(__dirname, '..', 'data', 'jugadores.json');
@@ -109,4 +109,4 @@ class GestorJugadores {
   }
 }
 
-module.exports = GestorJugadores;
+export default GestorJugadores; 
