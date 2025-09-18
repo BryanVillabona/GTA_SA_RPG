@@ -6,7 +6,6 @@ class Medico extends Personaje {
   }
 
   usarHabilidad(objetivo = this, notificador = null) {
-    // --- FIX: Comprobación para no curar si la vida está al máximo ---
     if (objetivo.vida >= objetivo.vidaMaxima) {
       if (notificador) {
         notificador.mostrarAccion(`${objetivo.nombre} ya tiene la vida al máximo.`);
@@ -38,7 +37,6 @@ class Ganster extends Personaje {
 
     const d1 = this.atacar(objetivo, notificador);
     
-    // --- FIX: Comprobación para no atacar a un enemigo ya derrotado ---
     let d2 = 0;
     if (objetivo.vida > 0) {
       d2 = this.atacar(objetivo, notificador);
@@ -51,7 +49,7 @@ class Ganster extends Personaje {
 }
 
 class Narco extends Personaje {
-    // Esta clase no necesita cambios en su habilidad por ahora
+
   constructor(opts = {}) {
     super({ ...opts, rol: 'Narco' });
   }
@@ -74,12 +72,10 @@ class Militar extends Personaje {
     super({ ...opts, rol: 'Militar' });
   }
 
-  // --- CAMBIO CLAVE: Ahora aplica un efecto temporal en lugar de un buff permanente ---
   usarHabilidad(_objetivo = null, notificador = null) {
-    const duracion = this.habilidadEspecial?.duracion || 2; // Dura 2 turnos (el del enemigo y el tuyo)
+    const duracion = this.habilidadEspecial?.duracion || 2;
     const multiplicador = this.habilidadEspecial?.multiplicador || 1.5;
 
-    // Aplicamos un efecto que será interpretado por recibirDaño
     this.aplicarEfecto('defensaReforzada', { multiplicador, duracion });
 
     if (notificador) {

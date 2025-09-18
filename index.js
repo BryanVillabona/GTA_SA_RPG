@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const boxen = require('boxen');
 const chalk = require('chalk');
+const cfonts = require('cfonts');
 
 const GestorJuego = require('./services/GestorJuego');
 const GestorJugadores = require('./services/GestorJugadores');
@@ -19,8 +20,13 @@ async function main() {
   let salir = false;
 
   while (!salir) {
-    console.clear();
-    console.log(boxen(chalk.green.bold('🔥 GTA San Andreas RPG 🔥'), { padding: 1, borderStyle: 'double' }));
+    cfonts.say('GTA SA|RPG', {
+      font: 'block',
+      align: 'center',
+      colors: ['yellow', 'white'],
+      background: 'transparent',
+      gradient: true,
+    });
 
     if (juego.personajeActivo) {
       Presentador.mensaje(`👤 Personaje activo: ${juego.personajeActivo.nombre} (${juego.personajeActivo.rol})`, 'info');

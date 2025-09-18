@@ -1,4 +1,3 @@
-// src/models/Personaje.js
 const config = require('../config');
 
 class Personaje {
@@ -56,12 +55,10 @@ class Personaje {
     for (const efecto in this.estado) {
       if (!this.estado[efecto]) continue;
 
-      // --- CAMBIO CLAVE: Notificación de quemadura mejorada ---
       if (efecto === 'quemadura' && this.estado.quemadura.dañoPorTurno > 0) {
         const danoQuemadura = this.estado.quemadura.dañoPorTurno;
         this.vida = Math.max(0, this.vida - danoQuemadura);
         if (notificador) {
-          // Mostramos los turnos restantes para mayor claridad
           const turnosRestantes = this.estado.quemadura.duracion - 1;
           notificador.mostrarAccion(`${this.nombre} sufre ${danoQuemadura} de daño por quemadura. (${turnosRestantes} turnos restantes)`);
         }

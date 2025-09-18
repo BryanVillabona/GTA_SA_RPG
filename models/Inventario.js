@@ -32,7 +32,6 @@ class Curacion extends Item {
     usar(objetivo) {
         if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
         
-        // --- FIX: Comprobación para no curar si la vida está al máximo ---
         if (objetivo.vida >= objetivo.vidaMaxima) {
             return { ok: false, mensaje: `${objetivo.nombre} ya tiene la vida al máximo. El objeto no se ha consumido.` };
         }
@@ -47,14 +46,13 @@ class Curacion extends Item {
 }
 
 class Armadura extends Item {
-  // --- CAMBIO CLAVE: Aplica un efecto temporal en lugar de un buff permanente ---
+
   usar(objetivo) {
     if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
     
     const defensaExtra = this.valor || 10;
-    const duracion = 2; // Dura 2 turnos (el del enemigo y el tuyo)
+    const duracion = 2; 
 
-    // Aplicamos el efecto al estado del personaje
     objetivo.aplicarEfecto('defensaAumentada', { valor: defensaExtra, duracion });
     this.cantidad--; 
 
