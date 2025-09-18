@@ -1,6 +1,5 @@
-// utils/Presentador.js
-import chalk from "chalk";
-import boxen from "boxen";
+const chalk = require('chalk');
+const boxen = require('boxen');
 
 class Presentador {
   static mostrarDetalles(personaje) {
@@ -34,4 +33,4 @@ class Presentador {
   }
 }
 
-export default Presentador;
+module.exports = Presentador;
