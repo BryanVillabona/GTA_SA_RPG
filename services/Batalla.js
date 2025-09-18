@@ -37,12 +37,15 @@ class Batalla {
       const esRondaFinal = ronda === config.JUEGO.RONDAS_POR_BATALLA;
       const enemigo = this._seleccionarEnemigo(esRondaFinal);
 
+      // --- CAMBIO CLAVE: Flag para controlar el uso de habilidad por ronda ---
+      let habilidadUsadaEnRonda = false;
+
       this.notificador.mensaje(`\n--- RONDA ${ronda} ---`, 'title');
       this.notificador.mostrarAccion(`${jugador.nombre} se enfrenta a ${enemigo.nombre}!`);
-      
       this.notificador.crearBarras(jugador, enemigo);
 
-      const resultadoRonda = await this._bucleDeBatalla(jugador, enemigo);
+      // Pasamos el flag al bucle de batalla
+      const resultadoRonda = await this._bucleDeBatalla(jugador, enemigo, habilidadUsadaEnRonda);
       this.notificador.detenerBarras();
 
       if (resultadoRonda === 'derrota') {
@@ -60,26 +63,36 @@ class Batalla {
         await this.gestorJugadores.actualizarJugador(jugador);
         return 'win';
       }
-      
+
       this.notificador.mensaje('...preparándose para la siguiente ronda...', 'info');
     }
   }
 
-  async _bucleDeBatalla(jugador, enemigo) {
+  async _bucleDeBatalla(jugador, enemigo, habilidadUsadaEnRonda) {
     while (jugador.vida > 0 && enemigo.vida > 0) {
-      await this._turnoJugador(jugador, enemigo);
+      const resultadoTurno = await this._turnoJugador(jugador, enemigo, habilidadUsadaEnRonda);
+      habilidadUsadaEnRonda = resultadoTurno.habilidadUsada;
+
       this.notificador.actualizarBarras(jugador, enemigo);
+      // --- FIX: Pasamos el notificador para que pueda mostrar el daño por quemadura ---
+      jugador.finalizarTurno(this.notificador); 
       if (enemigo.vida <= 0) break;
 
       this._turnoEnemigo(jugador, enemigo);
       this.notificador.actualizarBarras(jugador, enemigo);
+      // --- FIX: Pasamos el notificador también para el enemigo ---
+      enemigo.finalizarTurno(this.notificador);
       if (jugador.vida <= 0) break;
     }
     return jugador.vida > 0 ? 'victoria' : 'derrota';
   }
 
-  async _turnoJugador(jugador, enemigo) {
-    const choices = [{ name: 'Atacar', value: 'atacar' }, { name: 'Usar Habilidad', value: 'habilidad' }];
+  async _turnoJugador(jugador, enemigo, habilidadUsadaEnRonda) {
+    const choices = [{ name: 'Atacar', value: 'atacar' }];
+    // --- CAMBIO CLAVE: Solo mostramos la opción si no se ha usado la habilidad ---
+    if (!habilidadUsadaEnRonda) {
+      choices.push({ name: 'Usar Habilidad', value: 'habilidad' });
+    }
     if (jugador.inventario && jugador.inventario.length > 0) {
       choices.push({ name: 'Usar Objeto', value: 'objeto' });
     }
@@ -88,13 +101,18 @@ class Batalla {
       type: 'list', name: 'accion', message: '¿Qué harás?', choices,
     });
 
+    let habilidadAhoraUsada = habilidadUsadaEnRonda;
     if (accion === 'atacar') {
       jugador.atacar(enemigo, this.notificador);
     } else if (accion === 'habilidad') {
       jugador.usarHabilidad(enemigo, this.notificador);
+      habilidadAhoraUsada = true; // Marcamos que la habilidad fue usada
     } else if (accion === 'objeto') {
       await this._manejarUsoObjeto(jugador, enemigo);
     }
+
+    // Devolvemos el estado actualizado del flag
+    return { habilidadUsada: habilidadAhoraUsada };
   }
 
   async _manejarUsoObjeto(jugador, enemigo) {
@@ -110,7 +128,7 @@ class Batalla {
 
     const item = jugador.inventario[itemIndex];
     const objetivo = item.tipo === 'cura' || item.tipo === 'armadura' ? jugador : enemigo;
-    
+
     const resultado = item.usar(objetivo);
     this.notificador.mostrarAccion(resultado.mensaje);
 
@@ -148,7 +166,8 @@ class Batalla {
     jugador.experiencia += xpGanada;
     this.notificador.mensaje(`Ganas ${xpGanada} XP. (Total: ${jugador.experiencia})`, 'ok');
 
-    if (jugador.experiencia >= config.NIVELES.XP_PARA_SUBIR_NIVEL) {
+    // --- FIX: Cambiamos 'if' por 'while' para manejar múltiples subidas de nivel ---
+    while (jugador.experiencia >= config.NIVELES.XP_PARA_SUBIR_NIVEL) {
       jugador.subirNivel();
       jugador.experiencia -= config.NIVELES.XP_PARA_SUBIR_NIVEL;
       this.notificador.mensaje(`¡${jugador.nombre} ha subido al nivel ${jugador.nivel}!`, 'title');
@@ -159,7 +178,7 @@ class Batalla {
       type: 'list', name: 'objetoElegido', message: 'Has encontrado un objeto. Elige tu recompensa:',
       choices: objetosAleatorios.map(obj => ({ name: `${obj.nombre} - ${obj.descripcion}`, value: obj }))
     });
-    
+
     const ClaseItem = CLASES_ITEMS[objetoElegido.tipo];
     if (ClaseItem) {
       jugador.inventario.push(new ClaseItem(objetoElegido));

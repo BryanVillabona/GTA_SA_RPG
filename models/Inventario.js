@@ -29,26 +29,39 @@ class Arma extends Item {
 }
 
 class Curacion extends Item {
-  usar(objetivo) {
-    if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
-    
-    objetivo.vida = Math.min(objetivo.vidaMaxima, objetivo.vida + this.valor);
-    this.cantidad--;
+    usar(objetivo) {
+        if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
+        
+        // --- FIX: Comprobación para no curar si la vida está al máximo ---
+        if (objetivo.vida >= objetivo.vidaMaxima) {
+            return { ok: false, mensaje: `${objetivo.nombre} ya tiene la vida al máximo. El objeto no se ha consumido.` };
+        }
 
-    return { ok: true, mensaje: `${objetivo.nombre} recupera ${this.valor} puntos de vida con ${this.nombre}.` };
-  }
+        const vidaOriginal = objetivo.vida;
+        objetivo.vida = Math.min(objetivo.vidaMaxima, objetivo.vida + this.valor);
+        const vidaRecuperada = objetivo.vida - vidaOriginal;
+        this.cantidad--;
+    
+        return { ok: true, mensaje: `${objetivo.nombre} recupera ${Math.round(vidaRecuperada)} puntos de vida con ${this.nombre}.` };
+    }
 }
 
 class Armadura extends Item {
+  // --- CAMBIO CLAVE: Aplica un efecto temporal en lugar de un buff permanente ---
   usar(objetivo) {
     if (this.cantidad <= 0) return { ok: false, mensaje: `No quedan ${this.nombre}` };
     
-    objetivo.defensa += this.valor;
+    const defensaExtra = this.valor || 10;
+    const duracion = 2; // Dura 2 turnos (el del enemigo y el tuyo)
+
+    // Aplicamos el efecto al estado del personaje
+    objetivo.aplicarEfecto('defensaAumentada', { valor: defensaExtra, duracion });
     this.cantidad--; 
 
-    return { ok: true, mensaje: `${objetivo.nombre} equipa ${this.nombre} y aumenta su defensa en ${this.valor} puntos.` };
+    return { ok: true, mensaje: `${objetivo.nombre} usa ${this.nombre} y aumenta su defensa temporalmente.` };
   }
 }
+
 const CLASES_ITEMS = {
   arma: Arma,
   cura: Curacion,

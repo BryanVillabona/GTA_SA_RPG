@@ -54,7 +54,7 @@
       "efecto": {
         "tipo": "quemadura",
         "dañoPorTurno": 10,
-        "duracion": 2
+        "duracion": 3
       }
     },
     "inventario": [
@@ -76,8 +76,8 @@
       "descripcion": "Reduce a la mitad el daño recibido durante 1 turno.",
       "efecto": {
         "tipo": "defensa_extra",
-        "multiplicador": 0.5,
-        "duracion": 1
+        "multiplicador": 1.5,
+        "duracion": 2
       }
     },
     "inventario": [
