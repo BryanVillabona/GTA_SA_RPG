@@ -7,7 +7,7 @@ class Personaje {
 
     if (typeof nombre !== "string" || nombre.length === 0) throw new Error("Error en nombre");
 
-    this.id = id ?? Date.now().toString(); // puedes reemplazar por uuid
+    this.id = id ?? Date.now().toString();
     this.rol = rol;
     this.nombre = nombre;
     this.vida = Number(vida);
@@ -16,7 +16,7 @@ class Personaje {
     this.nivel = Number(nivel);
     this.habilidadEspecial = habilidadEspecial || {};
     this.inventario = inventario || [];
-    this.estado = {}; // para efectos temporales (quemadura, buffs, etc.)
+    this.estado = {}; 
   }
 
   atacar(objetivo, notificador = null) {
@@ -27,7 +27,6 @@ class Personaje {
   }
 
   recibirDaño(dano) {
-    // aplica defensa y buffs (si existieran)
     const multiplicadorDefensa = this.estado.defensaMultiplicador ?? 1;
     const defensaActual = (this.defensa || 0) * multiplicadorDefensa;
     const danoReal = Math.max(0, dano - defensaActual);
