@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "id": "1758165181930",
+    "nombre": "bryan",
+    "rol": "Medico",
+    "vida": 100,
+    "ataque": 10,
+    "defensa": 5,
+    "nivel": 1,
+    "experiencia": 0,
+    "habilidadEspecial": {
+      "nombre": "Curar",
+      "descripcion": "Restaura 30 puntos de vida al jugador.",
+      "efecto": {
+        "tipo": "curacion",
+        "valor": 30
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Botiquín",
+        "tipo": "cura",
+        "descripcion": "Restaura 20 puntos de vida al jugador.",
+        "valor": 50
+      }
+    ]
+  }
+]
