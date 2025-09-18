@@ -1,7 +1,7 @@
 [
   {
-    "id": "1758165181930",
-    "nombre": "bryan",
+    "id": "1758206056098",
+    "nombre": "sfdsf",
     "rol": "Medico",
     "vida": 100,
     "ataque": 10,
@@ -22,6 +22,58 @@
         "tipo": "cura",
         "descripcion": "Restaura 20 puntos de vida al jugador.",
         "valor": 50
+      }
+    ]
+  },
+  {
+    "id": "1758206223219",
+    "nombre": "dsad",
+    "rol": "Medico",
+    "vida": 100,
+    "ataque": 10,
+    "defensa": 5,
+    "nivel": 1,
+    "experiencia": 0,
+    "habilidadEspecial": {
+      "nombre": "Curar",
+      "descripcion": "Restaura 30 puntos de vida al jugador.",
+      "efecto": {
+        "tipo": "curacion",
+        "valor": 30
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Botiquín",
+        "tipo": "cura",
+        "descripcion": "Restaura 20 puntos de vida al jugador.",
+        "valor": 50
+      }
+    ]
+  },
+  {
+    "id": "1758208131338",
+    "nombre": "jhgjy",
+    "rol": "Ganster",
+    "vida": 120,
+    "ataque": 20,
+    "defensa": 8,
+    "nivel": 1,
+    "experiencia": 0,
+    "habilidadEspecial": {
+      "nombre": "Disparo doble",
+      "descripcion": "Dispara dos veces en un mismo turno.",
+      "efecto": {
+        "tipo": "ataque_doble",
+        "multiplicador": 2
+      }
+    },
+    "inventario": [
+      {
+        "nombre": "Pistola 9mm",
+        "tipo": "arma",
+        "descripcion": "Arma básica que aumenta el ataque en 5 puntos.",
+        "valor": 40
       }
     ]
   }

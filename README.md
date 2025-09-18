@@ -117,7 +117,7 @@ Este proyecto fue diseñado aplicando los 5 principios SOLID para garantizar un 
 
 El siguiente diagrama de clases ilustra la arquitectura y las relaciones entre los componentes clave del sistema.
 
-![Diagrama UML](./docs/diagrama-UML.png)
+![Diagrama UML](./docs/diagrama-UML.jpg)
 
 ---
 
