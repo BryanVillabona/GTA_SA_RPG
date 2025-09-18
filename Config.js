@@ -1,3 +1,4 @@
+// Configuración de modificación de atributos y batallas
 module.exports = {
   JUEGO: {
     RONDAS_POR_BATALLA: 3,
