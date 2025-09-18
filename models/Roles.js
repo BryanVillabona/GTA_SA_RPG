@@ -1,4 +1,4 @@
-import Personaje from './Personaje.js';
+const Personaje = require('./Personaje');
 class Medico extends Personaje {
   constructor(opts = {}) {
     super({ ...opts, rol: 'Medico' });
@@ -83,4 +83,4 @@ class Militar extends Personaje {
   }
 }
 
-export { Medico, Ganster, Narco, Militar };
+module.exports = { Medico, Ganster, Narco, Militar };
