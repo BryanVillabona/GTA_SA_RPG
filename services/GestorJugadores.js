@@ -1,113 +1,94 @@
-// services/GestorJugadores.js
-import fs from "fs/promises";
-import path from "path";
-import { Medico, Ganster, Narco, Militar } from '../models/Roles.js';
+const fs = require('fs').promises;
+const path = require('path');
+const { Medico, Ganster, Narco, Militar } = require('../models/Roles');
+const { CLASES_ITEMS } = require('../models/Inventario');
 
-// path por defecto (puedes inyectarlo si quieres)
-const DEFAULT_PATH = path.resolve("./data/jugadores.json");
-const ROLES_PATH = path.resolve("./data/personajes.json");
-
+const ROLES_PATH = path.join(__dirname, '..', 'data', 'personajes.json');
+const CLASES_ROLES = { Medico, Ganster, Narco, Militar };
 
 class GestorJugadores {
-  constructor({ jugadoresPath = DEFAULT_PATH, rolesPath = ROLES_PATH } = {}) {
-    this.jugadoresPath = jugadoresPath;
-    this.rolesPath = rolesPath;
-    // mapping rol string -> clase
-    this.clases = {
-      Medico,
-      Ganster,
-      Narco,
-      Militar
-    };
+  constructor({ jugadorRepository }) {
+    this.repositorio = jugadorRepository;
+    this.rolesData = null;
   }
 
-  async _leerArchivo(pathArchivo) {
-    try {
-      const txt = await fs.readFile(pathArchivo, 'utf8');
-      return JSON.parse(txt);
-    } catch (err) {
-      // si no existe, retornamos arreglo vacío
-      if (err.code === 'ENOENT') return [];
-      throw err;
+  async _cargarRoles() {
+    if (!this.rolesData) {
+      const txt = await fs.readFile(ROLES_PATH, 'utf8');
+      this.rolesData = JSON.parse(txt);
     }
+    return this.rolesData;
   }
 
-  async _escribirArchivo(pathArchivo, datos) {
-    const txt = JSON.stringify(datos, null, 2);
-    await fs.writeFile(pathArchivo, txt, 'utf8');
-    return true;
+  _hidratar(jugadorData) {
+    const ClasePersonaje = CLASES_ROLES[jugadorData.rol];
+    if (!ClasePersonaje) throw new Error(`Clase para el rol ${jugadorData.rol} no encontrada.`);
+
+    const inventarioHidratado = (jugadorData.inventario || []).map(itemData => {
+        const ClaseItem = CLASES_ITEMS[itemData.tipo];
+        return ClaseItem ? new ClaseItem(itemData) : null;
+    }).filter(Boolean);
+
+    return new ClasePersonaje({ ...jugadorData, inventario: inventarioHidratado });
   }
 
   async listarRoles() {
-    const roles = await this._leerArchivo(this.rolesPath);
-    // roles es array de objetos con campo "rol" etc.
-    return roles;
+    return this._cargarRoles();
   }
 
   async listarJugadores() {
-    const players = await this._leerArchivo(this.jugadoresPath);
-    return players;
+    const jugadoresData = await this.repositorio.obtenerTodos();
+    return jugadoresData.map(data => this._hidratar(data));
   }
 
-  async guardarJugadores(jugadores) {
-    await this._escribirArchivo(this.jugadoresPath, jugadores);
-  }
-
-  // crea y persiste un jugador nuevo basándose en el rol seleccionado
   async crearJugador({ nombre, rol }) {
-    if (!nombre || !rol) throw new Error('nombre y rol son requeridos');
-
-    // leer roles base
+    if (!nombre || !rol) throw new Error('Nombre y rol son requeridos');
     const roles = await this.listarRoles();
-    const plantilla = roles.find(r => r.rol.toLowerCase() === String(rol).toLowerCase());
-    if (!plantilla) throw new Error(`Rol "${rol}" no encontrado en ${this.rolesPath}`);
+    const plantilla = roles.find(r => r.rol.toLowerCase() === rol.toLowerCase());
+    if (!plantilla) throw new Error(`Rol "${rol}" no encontrado.`);
 
-    // decidir clase a instanciar
-    const Clase = this.clases[plantilla.rol];
-    const id = Date.now().toString();
+    const nuevoJugadorData = {
+      id: Date.now().toString(),
+      nombre,
+      rol: plantilla.rol,
+      vida: plantilla.vida,
+      ataque: plantilla.ataque,
+      defensa: plantilla.defensa,
+      nivel: 1,
+      experiencia: 0,
+      habilidadEspecial: plantilla.habilidadEspecial,
+      inventario: plantilla.inventario || [],
+    };
+    
+    const jugadores = await this.repositorio.obtenerTodos();
+    jugadores.push(nuevoJugadorData);
+    await this.repositorio.guardarTodos(jugadores);
 
-    let instancia;
-    if (Clase) {
-      // pasamos los atributos base + nombre + id
-      const opts = {
-        id,
-        rol: plantilla.rol,
-        nombre,
-        vida: plantilla.vida,
-        ataque: plantilla.ataque,
-        defensa: plantilla.defensa,
-        nivel: 1,
-        habilidadEspecial: plantilla.habilidadEspecial,
-        inventario: plantilla.inventario || []
-      };
-      instancia = new Clase(opts);
-    } else {
-      // si no existe mapeo de clase (por ejemplo rol nuevo), guardamos como objeto sencillo
-      instancia = {
-        id,
-        nombre,
-        rol: plantilla.rol,
-        vida: plantilla.vida,
-        ataque: plantilla.ataque,
-        defensa: plantilla.defensa,
-        nivel: 1,
-        habilidadEspecial: plantilla.habilidadEspecial,
-        inventario: plantilla.inventario || []
-      };
-    }
-
-    // persistir: leer jugadores, push y escribir
-    const jugadores = await this.listarJugadores();
-    jugadores.push(instancia);
-    await this.guardarJugadores(jugadores);
-
-    return instancia;
+    return this._hidratar(nuevoJugadorData);
   }
 
   async obtenerJugadorPorId(id) {
-    const jugadores = await this.listarJugadores();
-    return jugadores.find(j => String(j.id) === String(id));
+    const jugadoresData = await this.repositorio.obtenerTodos();
+    const jugadorData = jugadoresData.find(j => j.id === id);
+    return jugadorData ? this._hidratar(jugadorData) : null;
+  }
+
+  async actualizarJugador(jugador) {
+    const jugadores = await this.repositorio.obtenerTodos();
+    const index = jugadores.findIndex(j => j.id === jugador.id);
+    if (index === -1) throw new Error('Jugador no encontrado para actualizar.');
+    
+    const datosParaGuardar = { ...jugador, inventario: jugador.inventario.map(item => ({...item})) };
+    jugadores[index] = datosParaGuardar;
+    
+    await this.repositorio.guardarTodos(jugadores);
+  }
+
+  async eliminarJugadorPorId(id) {
+    let jugadores = await this.repositorio.obtenerTodos();
+    jugadores = jugadores.filter(j => j.id !== id);
+    await this.repositorio.guardarTodos(jugadores);
   }
 }
 
-export default GestorJugadores; 
+module.exports = GestorJugadores;

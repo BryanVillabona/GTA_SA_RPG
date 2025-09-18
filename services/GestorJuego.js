@@ -1,11 +1,11 @@
-// services/GestorJuego.js
-import inquirer from 'inquirer';
-import GestorJugadores from './GestorJugadores.js';
-import Presentador from '../utils/Presentador.js';
+const inquirer = require('inquirer');
+const Presentador = require('../utils/Presentador');
+const Batalla = require('./Batalla');
+const ConsoleNotificador = require('../utils/Notificador');
 
 class GestorJuego {
   constructor({ gestorJugadores }) {
-    this.gestorJugadores = gestorJugadores || new GestorJugadores();
+    this.gestorJugadores = gestorJugadores;
     this.personajeActivo = null;
   }
 
@@ -17,47 +17,17 @@ class GestorJuego {
     }));
 
     const answers = await inquirer.prompt([
-      { type: 'input', name: 'nombre', message: 'Nombre del personaje:' },
+      {
+        type: 'input', name: 'nombre', message: 'Nombre del personaje:',
+        validate: value => value.trim().length > 0 ? true : 'El nombre no puede estar vacío.',
+      },
       { type: 'list', name: 'rol', message: 'Selecciona un rol:', choices },
     ]);
 
     const nuevo = await this.gestorJugadores.crearJugador(answers);
     Presentador.mensaje(`✅ Personaje creado: ${nuevo.nombre} (${nuevo.rol})`, 'ok');
+    return nuevo;
   }
-
-  async eliminarPersonaje() {
-    const jugadores = await this.gestorJugadores.listarJugadores();
-    if (jugadores.length === 0) {
-      return Presentador.mensaje('⚠️ No hay personajes creados aún.', 'warn');
-    }
-  
-    const { personajeAEliminar } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'personajeAEliminar',
-        message: 'Selecciona el personaje a eliminar:',
-        choices: jugadores.map(j => ({
-          name: `${j.nombre} — ${j.rol} (Nivel ${j.nivel})`,
-          value: j.id,
-        })),
-      },
-    ]);
-  
-    // Filtramos para eliminar
-    const nuevosJugadores = jugadores.filter(j => j.id !== personajeAEliminar);
-  
-    // Guardamos cambios en el archivo
-    await this.gestorJugadores.guardarJugadores(nuevosJugadores);
-  
-    // Si eliminaste al personaje activo, lo reseteamos
-    if (this.personajeActivo && this.personajeActivo.id === personajeAEliminar) {
-      this.personajeActivo = null;
-      Presentador.mensaje('⚠️ El personaje activo fue eliminado.', 'warn');
-    }
-  
-    Presentador.mensaje('🗑️ Personaje eliminado con éxito.', 'ok');
-  }
-  
 
   async verPersonajes() {
     const jugadores = await this.gestorJugadores.listarJugadores();
@@ -65,10 +35,10 @@ class GestorJuego {
       return Presentador.mensaje('⚠️ No hay personajes creados aún.', 'warn');
     }
 
-    const { seleccionado } = await inquirer.prompt([
+    const { seleccionadoId } = await inquirer.prompt([
       {
         type: 'list',
-        name: 'seleccionado',
+        name: 'seleccionadoId',
         message: 'Elige un personaje:',
         choices: jugadores.map(j => ({
           name: `${j.nombre} — ${j.rol} (Nivel ${j.nivel})`,
@@ -76,7 +46,8 @@ class GestorJuego {
         })),
       },
     ]);
-    const personaje = await this.gestorJugadores.obtenerJugadorPorId(seleccionado);
+
+    const personaje = await this.gestorJugadores.obtenerJugadorPorId(seleccionadoId);
     Presentador.mostrarDetalles(personaje);
 
     const { activar } = await inquirer.prompt([
@@ -91,11 +62,25 @@ class GestorJuego {
 
   async iniciarBatalla() {
     if (!this.personajeActivo) {
-      return Presentador.mensaje('⚠️ No has seleccionado un personaje activo.', 'warn');
+      Presentador.mensaje('⚠️ No tienes un personaje activo. Debes seleccionar o crear uno.', 'warn');
+      return;
     }
+
     Presentador.mensaje(`⚔️ Preparando batalla con ${this.personajeActivo.nombre}...`, 'info');
-    // Aquí conectarás la clase Batalla más adelante
+    
+    const notificador = new ConsoleNotificador();
+    const batalla = new Batalla({ notificador, gestorJugadores: this.gestorJugadores });
+    
+    const resultado = await batalla.iniciarConJugador(this.personajeActivo);
+
+    if (resultado === 'lose') {
+      this.personajeActivo = null;
+    } else {
+      this.personajeActivo = await this.gestorJugadores.obtenerJugadorPorId(this.personajeActivo.id);
+    }
+
+    return resultado;
   }
 }
 
-export default GestorJuego
+module.exports = GestorJuego;
