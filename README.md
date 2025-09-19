@@ -16,7 +16,8 @@ Este proyecto fue desarrollado como parte de un taller académico, con un fuerte
 6.  [Principios SOLID Aplicados](#-principios-solid-aplicados)
 7.  [Diagrama UML](#-diagrama-uml)
 8.  [Gestión del Proyecto](#-gestión-del-proyecto)
-9.  [Integrantes del Equipo](#-integrantes-del-equipo)
+9.  [Video explicativo](#video-explicativo)
+10.  [Integrantes del Equipo](#-integrantes-del-equipo)
 
 ---
 
@@ -126,6 +127,14 @@ El siguiente diagrama de clases ilustra la arquitectura y las relaciones entre l
 El seguimiento de tareas, la planificación de sprints y la gestión general del proyecto se realizaron a través de un tablero en ClickUp.
 
 **➡️ [Ver tablero en ClickUp](https://sharing.clickup.com/90132465918/b/h/6-901319984636-2/272329dc6791c2e)**
+
+---
+
+## Video explicativo
+
+A continuación, se adjunta el video explicativo donde pone en marcha el juego por consola, se evidencia su estructura teniendo en cuenta los principios SOLID y la POO.
+
+**➡️ [Ver video](https://drive.google.com/file/d/1et0msVb8vs-JzNiLcil7nMg9agG7Jq1a/view)**
 
 ---
 
