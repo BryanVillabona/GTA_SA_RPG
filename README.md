@@ -125,7 +125,7 @@ El siguiente diagrama de clases ilustra la arquitectura y las relaciones entre l
 
 El seguimiento de tareas, la planificación de sprints y la gestión general del proyecto se realizaron a través de un tablero en ClickUp.
 
-**➡️ [Ver tablero en ClickUp](https://link-del-tablero.com)**
+**➡️ [Ver tablero en ClickUp](https://sharing.clickup.com/90132465918/b/h/6-901319984636-2/272329dc6791c2e)**
 
 ---
 
